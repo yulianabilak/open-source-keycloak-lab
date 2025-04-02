@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  keycloak:
+    container_name: keycloak-demo
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "9090:8080"
+    networks:
+      - keycloak-spring-net
+    command:
+      - "start-dev"
+
+networks:
+  keycloak-spring-net:
+    driver: bridge
