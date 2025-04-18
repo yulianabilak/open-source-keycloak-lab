@@ -3,11 +3,11 @@ package edu.bilak.opensourcekeycloaklab;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -19,7 +19,14 @@ import org.springframework.security.web.SecurityFilterChain;
  **/
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
+    private final KeycloakJwtAuthenticationConverter keycloakJwtAuthenticationConverter;
+
+    public SecurityConfig(KeycloakJwtAuthenticationConverter keycloakJwtAuthenticationConverter) {
+        this.keycloakJwtAuthenticationConverter = keycloakJwtAuthenticationConverter;
+    }
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,8 +34,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(auth -> auth.jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtAuthenticationConverter())))
-                .authorizeHttpRequests(req -> req.anyRequest().authenticated());
+                .oauth2ResourceServer(auth -> auth.jwt(jwt -> jwt.jwtAuthenticationConverter(keycloakJwtAuthenticationConverter)))
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/api/v1/demo/public").permitAll()
+                        .anyRequest().authenticated());
 
         return http.build();
     }
