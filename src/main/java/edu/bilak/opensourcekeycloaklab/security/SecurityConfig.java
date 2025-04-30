@@ -1,4 +1,4 @@
-package edu.bilak.opensourcekeycloaklab;
+package edu.bilak.opensourcekeycloaklab.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,6 @@ public class SecurityConfig {
     public SecurityConfig(KeycloakJwtAuthenticationConverter keycloakJwtAuthenticationConverter) {
         this.keycloakJwtAuthenticationConverter = keycloakJwtAuthenticationConverter;
     }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -1,4 +1,4 @@
-package edu.bilak.opensourcekeycloaklab;
+package edu.bilak.opensourcekeycloaklab.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
